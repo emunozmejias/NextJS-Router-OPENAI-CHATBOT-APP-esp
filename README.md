@@ -1,20 +1,64 @@
-Welcome to the NextJS base template bootstrapped using the create-next-app. This template supports TypeScript, but you can use normal JavaScript as well.
+# Next.js OpenAI Chatbot
 
-Getting Started
-Hit the run button to start the development server.
+Chatbot con Next.js App Router que usa la API de OpenAI (chat y transcripción con Whisper).
 
-You can start editing the page by modifying pages/index.tsx. The page auto-updates as you edit the file.
+## Requisitos
 
-API routes can be accessed on /api/hello. This endpoint can be edited in pages/api/hello.ts.
+- **Node.js**: 18.17 o superior (recomendado: 20.x LTS)
 
-The pages/api directory is mapped to /api/*. Files in this directory are treated as API routes instead of React pages.
+## Variables de entorno
 
-Learn More
-To learn more about Next.js, take a look at the following resources:
+El proyecto usa un archivo **`.env`** en la raíz para las variables de entorno (no los Secrets de Replit).
 
-Next.js Documentation - learn about Next.js features and API.
-Learn Next.js - an interactive Next.js tutorial.
-Productionizing your Next App
-To make your next App run smoothly in production make sure to deploy your project with Repl Deployments!
+1. Crea un archivo `.env` en la raíz del proyecto.
+2. Añade tu clave de OpenAI:
 
-You can also produce a production build by running npm run build and changing the run command to npm run start.
+```env
+OPENAI_API_KEY=sk-tu-clave-aqui
+```
+
+Puedes copiar `.env.example` a `.env` y rellenar el valor:
+
+```bash
+cp .env.example .env
+```
+
+Obtén una API key en [OpenAI API Keys](https://platform.openai.com/api-keys).
+
+## Desarrollo
+
+```bash
+npm run dev
+```
+
+## Build y producción
+
+```bash
+npm run build
+npm run start
+```
+
+## Docker
+
+Asegúrate de tener un archivo `.env` con `OPENAI_API_KEY` en la raíz del proyecto.
+
+**Compilar y ejecutar con Docker Compose:**
+
+```bash
+docker-compose up --build
+```
+
+La aplicación quedará disponible en **http://localhost:3000**.
+
+Para ejecutar en segundo plano:
+
+```bash
+docker-compose up -d --build
+```
+
+**Solo con Docker (sin compose):**
+
+```bash
+docker build -t openai-chatbot .
+docker run -p 3000:3000 --env-file .env openai-chatbot
+```

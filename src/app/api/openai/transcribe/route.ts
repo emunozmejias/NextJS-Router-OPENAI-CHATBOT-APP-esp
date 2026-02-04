@@ -2,9 +2,18 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import OpenAI from "openai";
 
-const openai = new OpenAI();
-
 export async function POST(req: Request) {
+  if (!process.env.OPENAI_API_KEY) {
+    return NextResponse.json(
+      { error: 'OPENAI_API_KEY no está configurada. Crea un archivo .env con OPENAI_API_KEY=tu_clave' },
+      { status: 501 }
+    );
+  }
+
+  const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+
   const body = await req.json();
 
   const base64Audio = body.audio;

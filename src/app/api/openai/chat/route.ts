@@ -1,8 +1,12 @@
-import { openai } from "@ai-sdk/openai";
+import { createOpenAI } from "@ai-sdk/openai";
 import { convertToCoreMessages, streamText } from "ai";
 import { ModelType } from "@/lib/types";
 
 export const runtime = "edge";
+
+const openai = createOpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 const SYSTEM_PROMPT = `You are a helpful, friendly, and knowledgeable AI assistant. You provide clear, accurate, and well-structured responses. When appropriate, you use markdown formatting to enhance readability, including:
 - Code blocks with syntax highlighting for code snippets
@@ -16,7 +20,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { messages, model = 'gpt-4o' } = body as {
-      messages: Array<{ role: string; content: string }>;
+      messages: Array<{ role: 'user' | 'assistant' | 'system'; content: string }>;
       model?: ModelType;
     };
 
@@ -32,6 +36,13 @@ export async function POST(req: Request) {
           status: 400,
           headers: { 'Content-Type': 'application/json' }
         }
+      );
+    }
+
+    if (!process.env.OPENAI_API_KEY) {
+      return new Response(
+        JSON.stringify({ error: 'OPENAI_API_KEY no está configurada. Crea un archivo .env con OPENAI_API_KEY=tu_clave' }),
+        { status: 501, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
